@@ -21,6 +21,15 @@ server {
         add_header Access-Control-Allow-Origin *;
     }
 
+    # Serve favicon.ico directly (universal browser support)
+    # Browsers automatically request /favicon.ico regardless of <link> tags
+    # ICO format ensures compatibility across all browsers including Edge
+    location = /favicon.ico {
+        add_header Content-Type image/x-icon;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        access_log off;
+    }
+
     # WebP images (favicon, etc.)
     location ~ \.webp$ {
         add_header Content-Type image/webp;
