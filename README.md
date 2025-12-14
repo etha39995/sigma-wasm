@@ -1,6 +1,6 @@
 # Rust WebAssembly A* Pathfinding Demo
 
-This is a port of an A* implementation of mine from an old Unity maze project.
+This is a port of an A* implementation of [Jacob Reichert](https://github.com/jacobdeichert/wasm-astar).
 
 Check out the demo [here](https://sigma-wasm.onrender.com/)!
 
