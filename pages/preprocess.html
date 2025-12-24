@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASM Preprocessing - Sigma WASM</title>
+    <title>SmolVLM Preprocessing - Sigma WASM</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/webp" href="/rustacean.webp">
     <link rel="apple-touch-icon" href="/rustacean.webp">
@@ -12,16 +12,37 @@
 <body>
     <div id="fullscreen">
         <div class="preprocess-container">
-            <h1>WASM Preprocessing Demo</h1>
+            <h1>SmolVLM Preprocessing Demo</h1>
             <nav class="nav-container">
                 <a href="/astar" class="nav-link">A* Pathfinding</a>
-                <a href="/preprocess">Preprocessing</a>
+                <a href="/preprocess" class="nav-link">Preprocessing</a>
             </nav>
             <div id="error" class="error-message"></div>
             
             <div class="preprocess-section">
+                <h2>About SmolVLM & WASM Preprocessing</h2>
+                <p>
+                    This demo showcases WebAssembly (WASM) preprocessing for <strong>SmolVLM-500M-Instruct</strong>, 
+                    a compact vision-language model from Hugging Face. SmolVLM processes both images and text 
+                    to generate multimodal outputs like image captioning and visual question answering.
+                </p>
+                <p>
+                    <strong>Architecture:</strong> This preprocessing step uses Rust-compiled WASM to efficiently 
+                    resize images and tokenize text before feeding them to SmolVLM. In a full implementation, 
+                    the preprocessed data would be passed to SmolVLM running via JavaScript frameworks (like 
+                    Transformers.js) on WebGPU for inference, enabling fully client-side, on-device AI without 
+                    server calls.
+                </p>
+                <p>
+                    <strong>Image Processing:</strong> SmolVLM uses 384×384 image patches encoded as 81 visual tokens. 
+                    Larger images are divided into patches, each processed separately. This demo resizes images 
+                    to 384×384 using high-quality Lanczos3 filtering in WASM for optimal preprocessing performance.
+                </p>
+            </div>
+            
+            <div class="preprocess-section">
                 <h2>Image Preprocessing</h2>
-                <p>Upload an image to resize it to 224x224 (common vision model input size)</p>
+                <p>Upload an image to resize it to 384×384 (SmolVLM patch size) using high-quality Lanczos3 resizing</p>
                 <input type="file" id="imageInput" accept="image/*">
                 <button id="processImageBtn">Process Image</button>
                 <div>
@@ -32,7 +53,7 @@
             
             <div class="preprocess-section">
                 <h2>Text Preprocessing</h2>
-                <p>Enter text to normalize and tokenize</p>
+                <p>Enter text to normalize and tokenize for SmolVLM input</p>
                 <textarea id="textInput" rows="4" cols="50" placeholder="Enter text here..."></textarea>
                 <br>
                 <button id="processTextBtn">Process Text</button>

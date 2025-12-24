@@ -198,9 +198,10 @@ function processImage(file: File, canvas: HTMLCanvasElement, statsDiv: HTMLDivEl
     tempCtx.drawImage(img, 0, 0);
     const imageData = tempCtx.getImageData(0, 0, img.width, img.height);
     
-    // Target size for preprocessing (e.g., 224x224 for vision models)
-    const targetWidth = 224;
-    const targetHeight = 224;
+    // Target size for SmolVLM preprocessing (384×384 patches)
+    // SmolVLM-500M-Instruct uses 384×384 image patches encoded as 81 visual tokens
+    const targetWidth = 384;
+    const targetHeight = 384;
     
     // Preprocess image
     const processedData = module.preprocess_image(

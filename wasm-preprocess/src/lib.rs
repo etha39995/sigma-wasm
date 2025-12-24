@@ -1,54 +1,43 @@
 use wasm_bindgen::prelude::*;
+use image::{io::Reader as ImageReader, ImageFormat};
+use std::io::Cursor;
 
 #[wasm_bindgen(start)]
 pub fn init() {
     console_error_panic_hook::set_once();
 }
 
-/// Preprocess image data by resizing to target dimensions
+/// Preprocess image data by resizing to target dimensions using high-quality Lanczos3 filtering
+/// Optimized for SmolVLM preprocessing (384×384 patch size)
 /// Returns preprocessed image data as RGBA bytes
+/// Note: source_width and source_height are kept for API compatibility but dimensions are determined from decoded image
 #[wasm_bindgen]
 pub fn preprocess_image(
     image_data: &[u8],
-    source_width: u32,
-    source_height: u32,
+    _source_width: u32,
+    _source_height: u32,
     target_width: u32,
     target_height: u32,
-) -> Vec<u8> {
-    // Simple nearest-neighbor resize for RGBA images
-    // In production, you'd use a proper image library
-    let source_size = (source_width * source_height * 4) as usize;
+) -> Result<Vec<u8>, JsValue> {
+    // Decode image from bytes (supports PNG and JPEG)
+    // Try PNG first, then JPEG
+    let img = ImageReader::with_format(Cursor::new(image_data), ImageFormat::Png)
+        .decode()
+        .or_else(|_| {
+            ImageReader::with_format(Cursor::new(image_data), ImageFormat::Jpeg)
+                .decode()
+        })
+        .map_err(|e| JsValue::from_str(&format!("Failed to decode image: {}", e)))?;
+
+    // Resize using Lanczos3 filter for high-quality resizing
+    // This is optimal for SmolVLM preprocessing which requires 384×384 patches
+    let resized_img = img.resize_exact(target_width, target_height, image::imageops::FilterType::Lanczos3);
+
+    // Convert to RGBA format
+    let rgba_img = resized_img.to_rgba8();
     
-    if image_data.len() < source_size {
-        return Vec::new();
-    }
-    
-    let mut output = Vec::with_capacity((target_width * target_height * 4) as usize);
-    
-    for y in 0..target_height {
-        for x in 0..target_width {
-            // Calculate source coordinates using nearest-neighbor
-            let src_x = (x * source_width) / target_width;
-            let src_y = (y * source_height) / target_height;
-            
-            let src_index = ((src_y * source_width + src_x) * 4) as usize;
-            
-            if src_index + 3 < image_data.len() {
-                output.push(image_data[src_index]);
-                output.push(image_data[src_index + 1]);
-                output.push(image_data[src_index + 2]);
-                output.push(image_data[src_index + 3]);
-            } else {
-                // Padding with transparent black if out of bounds
-                output.push(0);
-                output.push(0);
-                output.push(0);
-                output.push(0);
-            }
-        }
-    }
-    
-    output
+    // Return as Vec<u8> (RGBA bytes)
+    Ok(rgba_img.into_raw())
 }
 
 /// Simple text tokenization - converts text to token IDs
