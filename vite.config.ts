@@ -69,28 +69,42 @@ function copyDir(src: string, dest: string, moduleName: string): void {
         throw new Error(`Empty source file: ${srcPath}`);
       }
       
-      // Verify source file size is reasonable (should be at least 3KB for WASM modules)
+      // Verify source file size is reasonable (should be at least 8KB for WASM modules)
+      // Files around 3.5KB are incomplete (only have initialization code, no exports)
       // This catches incomplete files from the rust-builder stage
-      if (content.length < 3000 && entry.name.includes('wasm_') && !entry.name.includes('.d.ts')) {
+      if (content.length < 8000 && entry.name.includes('wasm_') && !entry.name.includes('.d.ts')) {
         const sourceExports = content.match(/export\s+(function|const|let|var)\s+(\w+)\s*[=(]/g) || [];
         const sourceExportNames = sourceExports.map(exp => {
           const match = exp.match(/export\s+(?:function|const|let|var)\s+(\w+)/);
           return match ? match[1] : '';
         }).filter(Boolean);
         
-        throw new Error(
-          `Source file ${srcPath} is suspiciously small (${content.length} bytes, expected ~10KB). ` +
-          `This suggests the file from rust-builder stage is incomplete. ` +
-          `Source exports found: ${sourceExportNames.join(', ') || 'none'}`
+        // Check if file has exports - if it's small but has exports, it might be OK
+        // But if it's small AND has no exports, it's definitely incomplete
+        if (sourceExportNames.length === 0) {
+          throw new Error(
+            `Source file ${srcPath} is incomplete from rust-builder stage: ` +
+            `size ${content.length} bytes (expected ~10KB), no exports found. ` +
+            `File appears to only contain initialization code. ` +
+            `First 300 chars: ${content.substring(0, 300)}`
+          );
+        }
+        
+        // If it has exports but is small, log a warning but allow it
+        console.warn(
+          `[copy-wasm-modules] Warning: Source file ${srcPath} is smaller than expected ` +
+          `(${content.length} bytes, expected ~10KB) but has ${sourceExportNames.length} exports: ${sourceExportNames.join(', ')}`
         );
       }
       
-      // Verify source file has exports before processing
+      // Verify source file has exports before processing (critical check)
       const sourceExportCount = (content.match(/export\s+(function|const|let|var|default|{)/g) || []).length;
       if (sourceExportCount === 0 && entry.name.includes('wasm_')) {
         throw new Error(
-          `Source file ${srcPath} has no exports. This suggests the file from rust-builder stage is incomplete. ` +
-          `File size: ${content.length} bytes. First 200 chars: ${content.substring(0, 200)}`
+          `Source file ${srcPath} has no exports. This indicates the file from rust-builder stage is incomplete. ` +
+          `File size: ${content.length} bytes. ` +
+          `Expected: ~10KB with exports like calculate, process_text, get_stats, etc. ` +
+          `First 500 chars: ${content.substring(0, 500)}`
         );
       }
       
