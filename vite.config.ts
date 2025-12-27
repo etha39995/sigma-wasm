@@ -373,6 +373,54 @@ function validateWasmModuleExports(filePath: string, moduleName: string): void {
   console.log(`[copy-wasm-modules] ✓ Validated ${moduleName}: all ${expected.length} exports present`);
 }
 
+// Plugin to copy public directory to dist during build
+// Vite should copy public/ automatically, but we ensure it happens explicitly
+function copyPublicAssets(): Plugin {
+  return {
+    name: 'copy-public-assets',
+    writeBundle() {
+      const publicDir = resolve(__dirname, 'public');
+      const distDir = resolve(__dirname, 'dist');
+
+      if (!existsSync(publicDir)) {
+        console.warn(`[copy-public-assets] Warning: public/ directory not found at ${publicDir}`);
+        return;
+      }
+
+      if (!existsSync(distDir)) {
+        console.warn(`[copy-public-assets] Warning: dist/ directory not found at ${distDir}`);
+        return;
+      }
+
+      console.log(`[copy-public-assets] Copying public/ directory to dist/`);
+
+      const copyPublicDir = (src: string, dest: string): void => {
+        if (!existsSync(src)) {
+          return;
+        }
+
+        mkdirSync(dest, { recursive: true });
+
+        const entries = readdirSync(src, { withFileTypes: true });
+
+        for (const entry of entries) {
+          const srcPath = join(src, entry.name);
+          const destPath = join(dest, entry.name);
+
+          if (entry.isDirectory()) {
+            copyPublicDir(srcPath, destPath);
+          } else {
+            copyFileSync(srcPath, destPath);
+          }
+        }
+      };
+
+      copyPublicDir(publicDir, distDir);
+      console.log(`[copy-public-assets] ✓ Copy complete`);
+    },
+  };
+}
+
 // Plugin to copy pkg directory to dist/pkg during build
 function copyWasmModules(): Plugin {
   return {
@@ -498,7 +546,7 @@ function copyWasmModules(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [devServerRouting(), removeVitePreload(), rewriteWasmImports(), copyWasmModules()],
+  plugins: [devServerRouting(), removeVitePreload(), rewriteWasmImports(), copyPublicAssets(), copyWasmModules()],
   build: {
     target: 'esnext',
     assetsInlineLimit: 0, // Prevent WASM from being inlined as data URIs
