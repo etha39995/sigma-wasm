@@ -441,9 +441,20 @@ function validateBabylonChunksModule(exports: unknown): WasmModuleBabylonChunks 
       return typeof result === 'string' ? result : '[]';
     },
     get_wasm_version: (): string => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-      const result = getWasmVersionFunc();
-      return typeof result === 'string' ? result : 'unknown';
+      if (typeof getWasmVersionFunc !== 'function') {
+        return 'unknown (function not found)';
+      }
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+        const result = getWasmVersionFunc();
+        if (typeof result === 'string' && result.length > 0) {
+          return result;
+        }
+        return `unknown (got: ${String(result)})`;
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        return `unknown (error: ${errorMsg})`;
+      }
     },
   };
 }

@@ -346,6 +346,7 @@ function validateWasmModuleExports(filePath: string, moduleName: string): void {
     wasm_preprocess_256m: ['preprocess_image', 'preprocess_image_crop', 'apply_contrast', 'apply_cinematic_filter', 'get_preprocess_stats', 'set_contrast', 'set_cinematic', 'get_contrast', 'get_cinematic'],
     wasm_astar: ['wasm_init', 'tick', 'key_down', 'key_up', 'mouse_move'],
     wasm_babylon_wfc: ['generate_layout', 'get_tile_at', 'set_pre_constraint', 'clear_pre_constraints', 'clear_layout', 'get_stats', 'generate_voronoi_regions', 'validate_road_connectivity'],
+    wasm_babylon_chunks: ['generate_layout', 'get_tile_at', 'set_pre_constraint', 'clear_pre_constraints', 'clear_layout', 'get_stats', 'generate_voronoi_regions', 'validate_road_connectivity', 'hex_astar', 'build_path_between_roads', 'generate_road_network_growing_tree', 'get_wasm_version'],
   };
   
   const expected = expectedExports[moduleName];
