@@ -880,7 +880,7 @@ pub fn generate_voronoi_regions(
     }
     
     let mut json_parts = Vec::new();
-    for hex in hex_grid {
+    for hex in &hex_grid {
         let mut nearest_seed: Option<&VoronoiSeed> = None;
         let mut min_dist = i32::MAX;
         
@@ -902,12 +902,26 @@ pub fn generate_voronoi_regions(
     }
     
     // If json_parts is empty (shouldn't happen), return at least one entry from first seed
-    if json_parts.is_empty() && !seeds.is_empty() {
-        let first_seed = &seeds[0];
-        json_parts.push(format!(
-            r#"{{"q":{},"r":{},"tileType":{}}}"#,
-            first_seed.q, first_seed.r, first_seed.tile_type as i32
-        ));
+    if json_parts.is_empty() {
+        if !seeds.is_empty() {
+            let first_seed = &seeds[0];
+            json_parts.push(format!(
+                r#"{{"q":{},"r":{},"tileType":{}}}"#,
+                first_seed.q, first_seed.r, first_seed.tile_type as i32
+            ));
+        } else if !hex_grid.is_empty() {
+            // Last resort: return first hex as grass
+            let first_hex = &hex_grid[0];
+            json_parts.push(format!(
+                r#"{{"q":{},"r":{},"tileType":0}}"#,
+                first_hex.q, first_hex.r
+            ));
+        }
+    }
+    
+    // Final safety check - ensure we never return empty array
+    if json_parts.is_empty() {
+        return r#"[{"q":0,"r":0,"tileType":0}]"#.to_string();
     }
     
     format!("[{}]", json_parts.join(","))
