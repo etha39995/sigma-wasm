@@ -16,6 +16,8 @@ struct HelloState {
     counter: i32,
     /// Message string that can be set and retrieved
     message: String,
+    /// Color string that can be set and retrieved
+    color: String,
 }
 
 impl HelloState {
@@ -23,7 +25,8 @@ impl HelloState {
     fn new() -> Self {
         HelloState {
             counter: 0,
-            message: String::from("Stuff........."),
+            message: String::from("Cool Message"),
+            color: String::from("Blue"),
         }
     }
     
@@ -45,6 +48,16 @@ impl HelloState {
     /// Set a new message
     fn set_message(&mut self, message: String) {
         self.message = message;
+    }
+
+    /// Get the current message
+    fn get_fave_color(&self) -> String {
+        self.color.clone()
+    }
+    
+    /// Set a new message
+    fn set_fave_color(&mut self, color: String) {
+        self.color = color;
     }
 }
 
@@ -131,3 +144,29 @@ pub fn set_message(message: String) {
     state.set_message(message);
 }
 
+/// Get the current color
+/// 
+/// **Learning Point**: Strings in Rust need to be converted to JavaScript strings.
+/// `wasm-bindgen` handles this automatically when you return a `String` from a
+/// `#[wasm_bindgen]` function.
+/// 
+/// @returns The current color as a JavaScript string
+#[wasm_bindgen]
+pub fn get_fave_color() -> String {
+    let state = HELLO_STATE.lock().unwrap();
+    state.get_fave_color()
+}
+
+/// Set a new color
+/// 
+/// **Learning Point**: JavaScript strings are automatically converted to Rust `String`
+/// when passed as parameters to `#[wasm_bindgen]` functions.
+/// 
+/// **To extend**: You could add validation, length limits, or formatting here.
+/// 
+/// @param color - The new color to set
+#[wasm_bindgen]
+pub fn set_fave_color(color) {
+    let mut state = HELLO_STATE.lock().unwrap();
+    state.set_fave_color(color);
+}
