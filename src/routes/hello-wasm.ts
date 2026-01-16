@@ -73,6 +73,12 @@ const getInitWasm = async (): Promise<unknown> => {
     if ('set_message' in moduleUnknown) {
       moduleKeys.push('set_message');
     }
+    if ('get_fave_gum' in moduleUnknown) {
+      moduleKeys.push('get_fave_gum');
+    }
+    if ('set__fave_gum' in moduleUnknown) {
+      moduleKeys.push('set__fave_gum');
+    }
     
     // Get all keys for error messages
     const allKeys = Object.keys(moduleUnknown);
@@ -96,6 +102,12 @@ const getInitWasm = async (): Promise<unknown> => {
     }
     if (!('set_message' in moduleUnknown) || typeof moduleUnknown.set_message !== 'function') {
       throw new Error(`Module missing 'set_message' export. Available: ${allKeys.join(', ')}`);
+    }
+    if (!('get_fave_gum' in moduleUnknown) || typeof moduleUnknown.get_fave_gum !== 'function') {
+      throw new Error(`Module missing 'get_fave_gum' export. Available: ${allKeys.join(', ')}`);
+    }
+    if (!('set_fave_gum' in moduleUnknown) || typeof moduleUnknown.set_fave_gum !== 'function') {
+      throw new Error(`Module missing 'set_fave_gum' export. Available: ${allKeys.join(', ')}`);
     }
     
     // Extract and assign functions - we've validated they exist and are functions above
@@ -126,6 +138,12 @@ const getInitWasm = async (): Promise<unknown> => {
     }
     if (typeof setMessageFunc !== 'function') {
       throw new Error('set_message export is not a function');
+    }
+    if (typeof getColorFunc !== 'function') {
+      throw new Error('get_fave_color export is not a function');
+    }
+    if (typeof setColorFunc !== 'function') {
+      throw new Error('set_fave_color export is not a function');
     }
     
     // TypeScript can't narrow Function to specific signatures after validation
@@ -225,6 +243,12 @@ function validateHelloModule(exports: unknown): WasmModuleHello | null {
     if (typeof wasmModuleExports.set_message !== 'function') {
       missingExports.push('set_message (function)');
     }
+    if (typeof wasmModuleExports.get_fave_color !== 'function') {
+      missingExports.push('get_fave_color (function)');
+    }
+    if (typeof wasmModuleExports.set_fave_color !== 'function') {
+      missingExports.push('set_fave_color (function)');
+    }
   }
   
   if (missingExports.length > 0) {
@@ -249,6 +273,8 @@ function validateHelloModule(exports: unknown): WasmModuleHello | null {
     increment_counter: wasmModuleExports.increment_counter,
     get_message: wasmModuleExports.get_message,
     set_message: wasmModuleExports.set_message,
+    get_fave_color: wasmModuleExports.get_fave_color,
+    set_fave_color: wasmModuleExports.set_fave_color,
   };
 }
 
@@ -337,6 +363,7 @@ export const init = async (): Promise<void> => {
   if (WASM_HELLO.wasmModule) {
     counterDisplay.textContent = WASM_HELLO.wasmModule.get_counter().toString();
     messageDisplay.textContent = WASM_HELLO.wasmModule.get_message();
+    colorDisplay.textContent = WASM_HELLO.wasmModule.get_fave_color();
   }
   
   // Set up event handlers
@@ -368,6 +395,28 @@ export const init = async (): Promise<void> => {
         WASM_HELLO.wasmModule.set_message(newMessage);
         messageDisplay.textContent = WASM_HELLO.wasmModule.get_message();
         messageInput.value = '';
+      }
+    }
+  });
+  setColorBtn.addEventListener('click', () => {
+    if (WASM_HELLO.wasmModule && colorInput) {
+      const newColor = colorInput.value.trim();
+      if (newColor) {
+        WASM_HELLO.wasmModule.set_color(newColor);
+        colorDisplay.textContent = WASM_HELLO.wasmModule.get_fave_color();
+        colorInput.value = '';
+      }
+    }
+  });
+  
+  // Allow Enter key to set color
+  colorInput.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Enter' && WASM_HELLO.wasmModule) {
+      const newColor = colorInput.value.trim();
+      if (newColor) {
+        WASM_HELLO.wasmModule.set_color(newColor);
+        colorDisplay.textContent = WASM_HELLO.wasmModule.get_color();
+        colorInput.value = '';
       }
     }
   });

@@ -50,12 +50,12 @@ impl HelloState {
         self.message = message;
     }
 
-    /// Get the current message
+    /// Get the current color
     fn get_fave_color(&self) -> String {
         self.color.clone()
     }
     
-    /// Set a new message
+    /// Set a new color
     fn set_fave_color(&mut self, color: String) {
         self.color = color;
     }
