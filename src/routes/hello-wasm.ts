@@ -73,11 +73,11 @@ const getInitWasm = async (): Promise<unknown> => {
     if ('set_message' in moduleUnknown) {
       moduleKeys.push('set_message');
     }
-    if ('get_fave_gum' in moduleUnknown) {
-      moduleKeys.push('get_fave_gum');
+    if ('get_fave_color' in moduleUnknown) {
+      moduleKeys.push('get_fave_color');
     }
-    if ('set__fave_gum' in moduleUnknown) {
-      moduleKeys.push('set__fave_gum');
+    if ('set__fave_color' in moduleUnknown) {
+      moduleKeys.push('set__fave_color');
     }
     
     // Get all keys for error messages
@@ -103,11 +103,11 @@ const getInitWasm = async (): Promise<unknown> => {
     if (!('set_message' in moduleUnknown) || typeof moduleUnknown.set_message !== 'function') {
       throw new Error(`Module missing 'set_message' export. Available: ${allKeys.join(', ')}`);
     }
-    if (!('get_fave_gum' in moduleUnknown) || typeof moduleUnknown.get_fave_gum !== 'function') {
-      throw new Error(`Module missing 'get_fave_gum' export. Available: ${allKeys.join(', ')}`);
+    if (!('get_fave_color' in moduleUnknown) || typeof moduleUnknown.get_fave_color !== 'function') {
+      throw new Error(`Module missing 'get_fave_color' export. Available: ${allKeys.join(', ')}`);
     }
-    if (!('set_fave_gum' in moduleUnknown) || typeof moduleUnknown.set_fave_gum !== 'function') {
-      throw new Error(`Module missing 'set_fave_gum' export. Available: ${allKeys.join(', ')}`);
+    if (!('set_fave_color' in moduleUnknown) || typeof moduleUnknown.set_fave_color !== 'function') {
+      throw new Error(`Module missing 'set_fave_color' export. Available: ${allKeys.join(', ')}`);
     }
     
     // Extract and assign functions - we've validated they exist and are functions above
