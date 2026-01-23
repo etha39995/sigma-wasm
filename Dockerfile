@@ -1,12 +1,3 @@
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    pkg-config \
-    libssl-dev \
-    ca-certificates \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-
 # Multi-stage Dockerfile for Rust WASM + Vite build
 # Stage 1: Rust WASM Builder
 # Using rust:alpine (smallest image, ~500MB) instead of rust:1-alpine
@@ -235,4 +226,3 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 # Use custom entrypoint that handles PORT default, then calls nginx:alpine's entrypoint
 ENTRYPOINT ["/docker-entrypoint-custom.sh"]
 CMD ["nginx", "-g", "daemon off;"]
-
