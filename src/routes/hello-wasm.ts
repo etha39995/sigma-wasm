@@ -29,8 +29,8 @@ let wasmModuleExports: {
   increment_counter: () => void;
   get_message: () => string;
   set_message: (message: string) => void;
-  get_favorite_color: () => void;
-  set_favorite_color: (color: string) => void;
+  get_fave_color: () => void;
+  set_fave_color: (color: string) => void;
 } | null = null; 
 
 /**
@@ -162,9 +162,9 @@ const getInitWasm = async (): Promise<unknown> => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       set_message: setMessageFunc as (message: string) => void,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      get_favorite_color: getFaveColorFunc as () => string,
+      get_fave_color: getFaveColorFunc as () => string,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      set_favorite_color: setFaveColorFunc as (color: string) => void,
+      set_fave_color: setFaveColorFunc as (color: string) => void,
     };
   }
   if (!wasmModuleExports) {
