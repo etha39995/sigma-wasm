@@ -1,3 +1,12 @@
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+
 # Multi-stage Dockerfile for Rust WASM + Vite build
 # Stage 1: Rust WASM Builder
 # Using rust:alpine (smallest image, ~500MB) instead of rust:1-alpine
