@@ -76,8 +76,8 @@ const getInitWasm = async (): Promise<unknown> => {
     if ('get_fave_color' in moduleUnknown) {
       moduleKeys.push('get_fave_color');
     }
-    if ('set__fave_color' in moduleUnknown) {
-      moduleKeys.push('set__fave_color');
+    if ('set_fave_color' in moduleUnknown) {
+      moduleKeys.push('set_fave_color');
     }
     
     // Get all keys for error messages
