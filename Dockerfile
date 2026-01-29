@@ -20,7 +20,7 @@ RUN cargo install wasm-bindgen-cli --version 0.2.106
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Verify wasm-bindgen is accessible and correct version
-RUN wasm-bindgen --version || (echo "ERROR: wasm-bindgen not found in PATH" && #exit 1)
+RUN wasm-bindgen --version || (echo "ERROR: wasm-bindgen not found in PATH" && exit 1)
 
 # Install wasm-opt from binaryen
 RUN apk add --no-cache binaryen
@@ -221,7 +221,7 @@ EXPOSE 80
 # Using /health endpoint for Docker HEALTHCHECK, Render.com uses / from render.yaml
 # Note: PORT env var is set by Render.com, health check uses default 80 if not set
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD sh -c 'PORT=${PORT:-80}; wget --no-verbose --tries=1 --spider http://localhost:$PORT/health 2>/dev/null || #exit 1'
+  CMD sh -c 'PORT=${PORT:-80}; wget --no-verbose --tries=1 --spider http://localhost:$PORT/health 2>/dev/null || exit 1'
 
 # Use custom entrypoint that handles PORT default, then calls nginx:alpine's entrypoint
 ENTRYPOINT ["/docker-entrypoint-custom.sh"]
