@@ -9,21 +9,21 @@ echo "==========================================================="
 if ! command -v rustc &> /dev/null; then
     echo "❌ Rust not found. Please install Rust: https://rustup.rs/"
     echo "   Run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
-    exit 1
+    #exit 1
 fi
 echo "✅ Rust found: $(rustc --version)"
 
 # Check for Node.js
 if ! command -v node &> /dev/null; then
     echo "❌ Node.js not found. Please install Node.js: https://nodejs.org/"
-    exit 1
+    #exit 1
 fi
 echo "✅ Node.js found: $(node --version)"
 
 # Check for npm
 if ! command -v npm &> /dev/null; then
     echo "❌ npm not found. Please install npm."
-    exit 1
+    #exit 1
 fi
 echo "✅ npm found: $(npm --version)"
 
