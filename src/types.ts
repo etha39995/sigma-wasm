@@ -195,8 +195,8 @@ export interface WasmModuleHello {
   increment_counter(): void;
   get_message(): string;
   set_message(message: string): void;
-  get_fave_color(): string;
-  get_fave_color(color: string): void;
+  get_favorite_color(): string;
+  get_favorite_color(color: string): void;
 }
 
 export interface WasmHello {

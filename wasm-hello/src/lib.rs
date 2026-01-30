@@ -51,12 +51,12 @@ impl HelloState {
     }
 
     /// Get the current color
-    fn get_fave_color(&self) -> String {
+    fn get_favorite_color(&self) -> String {
         self.color.clone()
     }
     
     /// Set a new color
-    fn set_fave_color(&mut self, color: String) {
+    fn set_favorite_color(&mut self, color: String) {
         self.color = color;
     }
 }
@@ -152,9 +152,9 @@ pub fn set_message(message: String) {
 /// 
 /// @returns The current color as a JavaScript string
 #[wasm_bindgen]
-pub fn get_fave_color() -> String {
+pub fn get_favorite_color() -> String {
     let state = HELLO_STATE.lock().unwrap();
-    state.get_fave_color()
+    state.get_favorite_color()
 }
 
 /// Set a new color
@@ -166,7 +166,7 @@ pub fn get_fave_color() -> String {
 /// 
 /// @param color - The new color to set
 #[wasm_bindgen]
-pub fn set_fave_color(color) {
+pub fn set_favorite_color(color) {
     let mut state = HELLO_STATE.lock().unwrap();
-    state.set_fave_color(color);
+    state.set_favorite_color(color);
 }
