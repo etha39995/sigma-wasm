@@ -29,7 +29,7 @@ let wasmModuleExports: {
   increment_counter: () => void;
   get_message: () => string;
   set_message: (message: string) => void;
-  get_fave_color: () => void;
+  get_fave_color: () => string;
   set_fave_color: (color: string) => void;
 } | null = null; 
 
@@ -118,8 +118,8 @@ const getInitWasm = async (): Promise<unknown> => {
     const incrementCounterFunc = moduleUnknown.increment_counter;
     const getMessageFunc = moduleUnknown.get_message;
     const setMessageFunc = moduleUnknown.set_message;
-    const getFaveColorFunc = moduleUnknown.get_fave_color;
-    const setFaveColorFunc = moduleUnknown.set_fave_color;
+    const getFavoriteColorFunc = moduleUnknown.get_fave_color;
+    const setFavoriteColorFunc = moduleUnknown.set_fave_color;
     
     if (typeof defaultFunc !== 'function') {
       throw new Error('default export is not a function');
@@ -139,10 +139,10 @@ const getInitWasm = async (): Promise<unknown> => {
     if (typeof setMessageFunc !== 'function') {
       throw new Error('set_message export is not a function');
     }
-    if (typeof getColorFunc !== 'function') {
+    if (typeof getFavoriteColorFunc !== 'function') {
       throw new Error('get_fave_color export is not a function');
     }
-    if (typeof setColorFunc !== 'function') {
+    if (typeof setFavoriteColorFunc !== 'function') {
       throw new Error('set_fave_color export is not a function');
     }
     
@@ -162,9 +162,9 @@ const getInitWasm = async (): Promise<unknown> => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       set_message: setMessageFunc as (message: string) => void,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      get_fave_color: getFaveColorFunc as () => string,
+      get_fave_color: getFavoriteColorFunc as () => string,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      set_fave_color: setFaveColorFunc as (color: string) => void,
+      set_fave_color: setFavoriteColorFunc as (color: string) => void,
     };
   }
   if (!wasmModuleExports) {
@@ -341,10 +341,13 @@ export const init = async (): Promise<void> => {
   
   // Get UI elements
   const counterDisplay = document.getElementById('counter-display');
-  const messageDisplay = document.getElementById('message-display');
   const incrementBtn = document.getElementById('increment-btn');
+  const messageDisplay = document.getElementById('message-display');
   const messageInputEl = document.getElementById('message-input');
   const setMessageBtn = document.getElementById('set-message-btn');
+  const colorDisplay = document.getElementById('message-display');
+  const colorInput = document.getElementById('message-input');
+  const setColorBtn = document.getElementById('set-message-btn');
   
   if (!counterDisplay || !messageDisplay || !incrementBtn || !messageInputEl || !setMessageBtn) {
     throw new Error('Required UI elements not found');

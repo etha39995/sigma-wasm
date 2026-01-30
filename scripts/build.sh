@@ -107,7 +107,7 @@ if [ ${#FAILED_MODULES[@]} -gt 0 ]; then
     echo "" >&2
     echo "This indicates the rust-builder stage produced incomplete files." >&2
     echo "Check wasm-bindgen output and Docker build logs for errors." >&2
-    #exit 1
+    exit 1
 fi
 
 echo "==========================================================="

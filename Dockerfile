@@ -97,16 +97,16 @@ RUN echo "Verifying WASM module files in pkg/..." && \
     for js_file in pkg/*/wasm_*.js; do \
       if [ ! -f "$js_file" ]; then \
         echo "ERROR: Missing JS file: $js_file" >&2; \
-        #exit 1; \
+        exit 1; \
       fi; \
       size=$(stat -c%s "$js_file" 2>/dev/null || echo "0"); \
       if [ "$size" -lt 8000 ]; then \
         echo "ERROR: JS file too small: $js_file ($size bytes)" >&2; \
-        #exit 1; \
+        exit 1; \
       fi; \
       if ! grep -q "export" "$js_file"; then \
         echo "ERROR: JS file has no exports: $js_file" >&2; \
-        #exit 1; \
+        exit 1; \
       fi; \
     done && \
     echo "✓ All WASM module files verified successfully"
@@ -163,7 +163,7 @@ RUN if [ -d "public" ] && [ -d "dist" ]; then \
         ls -la dist/ || true; \
         echo "Listing public/ contents:" && \
         ls -la public/ || true; \
-        #exit 1; \
+        exit 1; \
       fi; \
     else \
       echo "Warning: public/ or dist/ directory not found"; \
@@ -174,20 +174,20 @@ RUN if [ -d "public" ] && [ -d "dist" ]; then \
 RUN echo "Verifying public assets in dist/..." && \
     if [ ! -d "dist/icons" ]; then \
       echo "ERROR: dist/icons/ directory not found" >&2; \
-      #exit 1; \
+      exit 1; \
     fi && \
     if [ ! -f "dist/icons/icon-144x144.png" ]; then \
       echo "ERROR: dist/icons/icon-144x144.png not found" >&2; \
-      #exit 1; \
+      exit 1; \
     fi && \
     if [ ! -f "dist/manifest.json" ]; then \
       echo "ERROR: dist/manifest.json not found" >&2; \
-      #exit 1; \
+      exit 1; \
     fi && \
     icon_count=$(find dist/icons -type f -name "*.png" | wc -l) && \
     if [ "$icon_count" -lt 10 ]; then \
       echo "ERROR: Expected at least 10 icon files, found $icon_count" >&2; \
-      #exit 1; \
+      exit 1; \
     fi && \
     echo "✓ All public assets verified successfully (found $icon_count icon files)"
 
