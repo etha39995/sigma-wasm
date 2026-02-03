@@ -29,8 +29,8 @@ let wasmModuleExports: {
   increment_counter: () => void;
   get_message: () => string;
   set_message: (message: string) => void;
-  get_fave_gum: () => string;
-  set_fave_gum: (gum: string) => void;
+  get_fave_color: () => string;
+  set_fave_color: (color: string) => void;
   get_fave_squishy: () => string;
   set_fave_squishy: (squishy: string) => void;
 } | null = null;
@@ -75,11 +75,11 @@ const getInitWasm = async (): Promise<unknown> => {
     if ('set_message' in moduleUnknown) {
       moduleKeys.push('set_message');
     }
-    if ('get_fave_gum' in moduleUnknown) {
-      moduleKeys.push('get_fave_gum');
+    if ('get_fave_color' in moduleUnknown) {
+      moduleKeys.push('get_fave_color');
     }
-    if ('set_fave_gum' in moduleUnknown) {
-      moduleKeys.push('set_fave_gum');
+    if ('set_fave_color' in moduleUnknown) {
+      moduleKeys.push('set_fave_color');
     }
     if ('get_fave_squishy' in moduleUnknown) {
       moduleKeys.push('get_fave_squishy');
@@ -111,11 +111,11 @@ const getInitWasm = async (): Promise<unknown> => {
     if (!('set_message' in moduleUnknown) || typeof moduleUnknown.set_message !== 'function') {
       throw new Error(`Module missing 'set_message' export. Available: ${allKeys.join(', ')}`);
     }
-    if (!('get_fave_gum' in moduleUnknown) || typeof moduleUnknown.get_fave_gum !== 'function') {
-      throw new Error(`Module missing 'get_fave_gum' export. Available: ${allKeys.join(', ')}`);
+    if (!('get_fave_color' in moduleUnknown) || typeof moduleUnknown.get_fave_color !== 'function') {
+      throw new Error(`Module missing 'get_fave_color' export. Available: ${allKeys.join(', ')}`);
     }
-    if (!('set_fave_gum' in moduleUnknown) || typeof moduleUnknown.set_fave_gum !== 'function') {
-      throw new Error(`Module missing 'set_fave_gum' export. Available: ${allKeys.join(', ')}`);
+    if (!('set_fave_color' in moduleUnknown) || typeof moduleUnknown.set_fave_color !== 'function') {
+      throw new Error(`Module missing 'set_fave_color' export. Available: ${allKeys.join(', ')}`);
     }
     if (!('get_fave_squishy' in moduleUnknown) || typeof moduleUnknown.get_fave_squishy !== 'function') {
       throw new Error(`Module missing 'get_fave_squishy' export. Available: ${allKeys.join(', ')}`);
@@ -132,8 +132,8 @@ const getInitWasm = async (): Promise<unknown> => {
     const incrementCounterFunc = moduleUnknown.increment_counter;
     const getMessageFunc = moduleUnknown.get_message;
     const setMessageFunc = moduleUnknown.set_message;
-    const getFaveGumFunc = moduleUnknown.get_fave_gum;
-    const setFaveGumFunc = moduleUnknown.set_fave_gum;
+    const getFaveColorFunc = moduleUnknown.get_fave_color;
+    const setFaveColorFunc = moduleUnknown.set_fave_color;
     const getFaveSquishyFunc = moduleUnknown.get_fave_squishy;
     const setFaveSquishyFunc = moduleUnknown.set_fave_squishy;
     
@@ -155,11 +155,11 @@ const getInitWasm = async (): Promise<unknown> => {
     if (typeof setMessageFunc !== 'function') {
       throw new Error('set_message export is not a function');
     }
-    if (typeof getFaveGumFunc !== 'function') {
-      throw new Error('get_fave_gum export is not a function');
+    if (typeof getFaveColorFunc !== 'function') {
+      throw new Error('get_fave_color export is not a function');
     }
-    if (typeof setFaveGumFunc !== 'function') {
-      throw new Error('set_fave_gum export is not a function');
+    if (typeof setFaveColorFunc !== 'function') {
+      throw new Error('set_fave_color export is not a function');
     }
     if (typeof getFaveSquishyFunc !== 'function') {
       throw new Error('get_fave_squishy export is not a function');
@@ -184,9 +184,9 @@ const getInitWasm = async (): Promise<unknown> => {
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       set_message: setMessageFunc as (message: string) => void,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      get_fave_gum: getFaveGumFunc as () => string,
+      get_fave_color: getFaveColorFunc as () => string,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      set_fave_gum: setFaveGumFunc as (gum: string) => void,
+      set_fave_color: setFaveColorFunc as (gum: string) => void,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       get_fave_squishy: getFaveSquishyFunc as () => string,
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -269,11 +269,11 @@ function validateHelloModule(exports: unknown): WasmModuleHello | null {
     if (typeof wasmModuleExports.set_message !== 'function') {
       missingExports.push('set_message (function)');
     }
-    if (typeof wasmModuleExports.get_fave_gum !== 'function') {
-      missingExports.push('get_fave_gum (function)');
+    if (typeof wasmModuleExports.get_fave_color !== 'function') {
+      missingExports.push('get_fave_color (function)');
     }
-    if (typeof wasmModuleExports.set_fave_gum !== 'function') {
-      missingExports.push('set_fave_gum (function)');
+    if (typeof wasmModuleExports.set_fave_color !== 'function') {
+      missingExports.push('set_fave_color (function)');
     }
     if (typeof wasmModuleExports.get_fave_squishy !== 'function') {
       missingExports.push('get_fave_squishy (function)');
@@ -305,8 +305,8 @@ function validateHelloModule(exports: unknown): WasmModuleHello | null {
     increment_counter: wasmModuleExports.increment_counter,
     get_message: wasmModuleExports.get_message,
     set_message: wasmModuleExports.set_message,
-    get_fave_gum: wasmModuleExports.get_fave_gum,
-    set_fave_gum: wasmModuleExports.set_fave_gum,
+    get_fave_color: wasmModuleExports.get_fave_color,
+    set_fave_color: wasmModuleExports.set_fave_color,
     get_fave_squishy: wasmModuleExports.get_fave_squishy,
     set_fave_squishy: wasmModuleExports.set_fave_squishy,
   };
@@ -376,19 +376,19 @@ export const init = async (): Promise<void> => {
   // Get UI elements
   const counterDisplay = document.getElementById('counter-display');
   const messageDisplay = document.getElementById('message-display');
-  const faveGumDisplay = document.getElementById('fave-gum-display');
+  const faveColorDisplay = document.getElementById('fave-color-display');
   const faveSquishyDisplay = document.getElementById('fave-squishy-display');
   const incrementBtn = document.getElementById('increment-btn');
   const messageInputEl = document.getElementById('message-input');
   const setMessageBtn = document.getElementById('set-message-btn');
-  const faveGumInputEl = document.getElementById('fave-gum-input');
-  const setFaveGumBtn = document.getElementById('set-fave-gum-btn');
+  const faveColorInputEl = document.getElementById('fave-color-input');
+  const setFaveColorBtn = document.getElementById('set-fave-color-btn');
   const faveSquishyInputEl = document.getElementById('fave-squishy-input');
   const setFaveSquishyBtn = document.getElementById('set-fave-squishy-btn');
   
   if (!counterDisplay || !messageDisplay || 
     !incrementBtn || !messageInputEl || !setMessageBtn ||
-    !faveGumDisplay || !faveGumInputEl || !setFaveGumBtn ||
+    !faveColorDisplay || !faveColorInputEl || !setFaveColorBtn ||
     !faveSquishyDisplay || !faveSquishyInputEl || !setFaveSquishyBtn
   ) {
     throw new Error('Required UI elements not found');
@@ -402,11 +402,11 @@ export const init = async (): Promise<void> => {
   const messageInput = messageInputEl;
 
   // Type narrowing for input element
-  if (!(faveGumInputEl instanceof HTMLInputElement)) {
-    throw new Error('fave-gum-input element is not an HTMLInputElement');
+  if (!(faveColorInputEl instanceof HTMLInputElement)) {
+    throw new Error('fave-color-input element is not an HTMLInputElement');
   }
   
-  const faveGumInput = faveGumInputEl;
+  const faveColorInput = faveColorInputEl;
 
   // Type narrowing for input element
   if (!(faveSquishyInputEl instanceof HTMLInputElement)) {
@@ -421,7 +421,7 @@ export const init = async (): Promise<void> => {
   if (WASM_HELLO.wasmModule) {
     counterDisplay.textContent = WASM_HELLO.wasmModule.get_counter().toString();
     messageDisplay.textContent = WASM_HELLO.wasmModule.get_message();
-    faveGumDisplay.textContent = WASM_HELLO.wasmModule.get_fave_gum();
+    faveColorDisplay.textContent = WASM_HELLO.wasmModule.get_fave_color();
     faveSquishyDisplay.textContent = WASM_HELLO.wasmModule.get_fave_squishy();
   }
   
@@ -458,25 +458,25 @@ export const init = async (): Promise<void> => {
     }
   });
 
-  setFaveGumBtn.addEventListener('click', () => {
-    if (WASM_HELLO.wasmModule && faveGumInput) {
-      const newGum = faveGumInput.value.trim();
+  setFaveColorBtn.addEventListener('click', () => {
+    if (WASM_HELLO.wasmModule && faveColorInput) {
+      const newGum = faveColorInput.value.trim();
       if (newGum) {
-        WASM_HELLO.wasmModule.set_fave_gum(newGum);
-        faveGumDisplay.textContent = WASM_HELLO.wasmModule.get_fave_gum();
-        faveGumInput.value = '';
+        WASM_HELLO.wasmModule.set_fave_color(newGum);
+        faveColorDisplay.textContent = WASM_HELLO.wasmModule.get_fave_color();
+        faveColorInput.value = '';
       }
     }
   });
 
   // Allow Enter key to set message
-  faveGumInput.addEventListener('keydown', (e: KeyboardEvent) => {
+  faveColorInput.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Enter' && WASM_HELLO.wasmModule) {
-      const newGum = faveGumInput.value.trim();
+      const newGum = faveColorInput.value.trim();
       if (newGum) {
-        WASM_HELLO.wasmModule.set_fave_gum(newGum);
-        faveGumDisplay.textContent = WASM_HELLO.wasmModule.get_fave_gum();
-        faveGumInput.value = '';
+        WASM_HELLO.wasmModule.set_fave_color(newGum);
+        faveColorDisplay.textContent = WASM_HELLO.wasmModule.get_fave_color();
+        faveColorInput.value = '';
       }
     }
   });

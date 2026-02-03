@@ -195,8 +195,8 @@ export interface WasmModuleHello {
   increment_counter(): void;
   get_message(): string;
   set_message(message: string): void;
-  get_fave_gum(): string;
-  set_fave_gum(gum: string): void;
+  get_fave_color(): string;
+  set_fave_color(color: string): void;
   get_fave_squishy(): string;
   set_fave_squishy(squishy: string): void;
 }

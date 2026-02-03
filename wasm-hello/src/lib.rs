@@ -16,8 +16,8 @@ struct HelloState {
     counter: i32,
     /// Message string that can be set and retrieved
     message: String,
-    /// Gum string that can be set and retrieved
-    gum: String,
+    /// Color string that can be set and retrieved
+    color: String,
     /// Squishy string that can be set and retrieved
     squishy: String,
 }
@@ -28,7 +28,7 @@ impl HelloState {
         HelloState {
             counter: 0,
             message: String::from("Rust WASM is so Sigma!"),
-            gum: String::from("Hubba Bubba"),
+            color: String::from("Blue"),
             squishy: String::from("Pop It"),
         }
     }
@@ -53,14 +53,14 @@ impl HelloState {
         self.message = message;
     }
 
-    /// Get the current gum
-    fn get_fave_gum(&self) -> String {
-        self.gum.clone()
+    /// Get the current color
+    fn get_fave_color(&self) -> String {
+        self.color.clone()
     }
     
-    /// Set a new gum
-    fn set_fave_gum(&mut self, gum: String) {
-        self.gum = gum;
+    /// Set a new color
+    fn set_fave_color(&mut self, color: String) {
+        self.color = color;
     }
 
     /// Get the current squishy
@@ -157,31 +157,31 @@ pub fn set_message(message: String) {
     state.set_message(message);
 }
 
-/// Get the current gum
+/// Get the current color
 /// 
 /// **Learning Point**: Strings in Rust need to be converted to JavaScript strings.
 /// `wasm-bindgen` handles this automatically when you return a `String` from a
 /// `#[wasm_bindgen]` function.
 /// 
-/// @returns The current gum as a JavaScript string
+/// @returns The current color as a JavaScript string
 #[wasm_bindgen]
-pub fn get_fave_gum() -> String {
+pub fn get_fave_color() -> String {
     let state = HELLO_STATE.lock().unwrap();
-    state.get_fave_gum()
+    state.get_fave_color()
 }
 
-/// Set a new gum
+/// Set a new color
 /// 
 /// **Learning Point**: JavaScript strings are automatically converted to Rust `String`
 /// when passed as parameters to `#[wasm_bindgen]` functions.
 /// 
 /// **To extend**: You could add validation, length limits, or formatting here.
 /// 
-/// @param gum - The new gum to set
+/// @param color - The new color to set
 #[wasm_bindgen]
-pub fn set_fave_gum(gum: String) {
+pub fn set_fave_color(color: String) {
     let mut state = HELLO_STATE.lock().unwrap();
-    state.set_fave_gum(gum);
+    state.set_fave_color(color);
 }
 
 /// Get the current squishy
